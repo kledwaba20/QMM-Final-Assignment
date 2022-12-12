@@ -1,0 +1,90 @@
+---
+title: "Quantitative Final"
+author: "Khutso Ledwaba, Tilak Kumar Bonala, Sai Supriya Vengala"
+date: "2022-12-10"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+
+
+```
+
+# Final exam
+# Load libraries and lp file
+```{r}
+library(lpSolveAPI)
+library(lpSolve)
+
+#call lp file
+Students<- read.lp("Students.lp")
+print(Students)
+```
+
+
+#Creating the table for the students group
+```{r}
+#The matrix for the table
+Studentstable <- matrix(c(1,2,3,4,5,6,7,8,9,10,11,12,
+                       3.4,4,2.6,3.7,2.5,3,3.8,3.2,3.4,2,3.9,2.8,
+                       27,23,24,30,26,25,27,29,27,24,25,28,
+44124,44240,44242,44122,44240,44242,44240,44240,44240,44242,44240,44242,
+44154.4,44267,44268.6,44155.7,44268.5,44270,44270.8,44272.2,44270.4,44268,44268.9,44272.8),ncol=5, byrow = F)
+
+#Column names
+colnames(Studentstable) <- c("StudentID","GPA", "Age", "Location", "Total")
+
+as.table(Studentstable)
+
+# This table represents the students and the randomly generated factors:
+# The gpa is based on a 4.0 scale
+# The age is generated from 20 to 30
+# The location is based on zip codes across Kent and Cleveland
+# The total column is the sum of each factor for each student
+
+```
+
+#Constraints and factors
+```{r}
+#The constraints for this project is that each group must only have 3 students per group.
+#Each student is also only able to belong to one group
+
+#Factors
+#Each factor plays a crucial role in determing the success of the group:
+#A student with a high GPA combined with their age indicates a more intelligent and wiser who will now when to take charge in a project
+#Students living in different zip codes may have a tough time being able to collaborate on the assignment, so while student 1 and 2 reside in different geographical areas their high GPAs still give them a great chance to be able to figure out a solution to the problem.
+```
+
+#Solving the lp model and objective function
+```{r}
+#Solve the lp model
+solve(Students)
+#Getting the variables in which the students belong.
+get.variables(Students)
+
+# This data shows in what group each student will belong to in order to obtain the best results.
+# Group1: Student 7, Student8 and Student12
+# Group2: Student 6, Student9 and Student11
+# Group3: Student 3, Student5 and Student10
+# Group4: Student 1, Student2 and Student4
+
+#Define the objective function
+get.objective(Students)
+
+# The objective function is equal to 531007.3
+
+
+# The sum of students of each group: 
+# Group1: Student7 + Student8  + Student12 = 44270.8 + 44272.2 + 44272.8 = 132815.8
+# Group2: Student6 + Student9  + Student11 = 44270  +   44270.4   + 44268.9 = 132809.3
+# Group3: Student3 + Student5  + Student10 = 44268.6 + 44268.5 +  44268 = 132805.1
+# Group4: Student1 + Student2  + Student4  = 44154.4 + 44267 + 44155.7 = 132577.1
+
+#So as you can see the main objective function is equal to Group1 + Group2 + Group3 + Group4 for a total of:
+
+#531007.3
+```
